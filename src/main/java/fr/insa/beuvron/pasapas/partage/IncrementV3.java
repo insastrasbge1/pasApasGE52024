@@ -10,36 +10,37 @@ import fr.insa.beuvron.pasapas.Utils;
  *
  * @author fdebertranddeb01
  */
-public class IncrementV2 {
-    
+public class IncrementV3 {
+
     public static final long MAX = 1000000;
-    
+
     public static long compteur = 0;
-    
+
     public static void gogogo() {
         long curTime = System.currentTimeMillis();
         Thread t1 = new Thread(() -> {
-            synchronized (IncrementV2.class) {
-            for(long i = 0 ; i < MAX ; i ++) {
-                compteur ++;
+            for (long i = 0; i < MAX; i++) {
+                synchronized (IncrementV3.class) {
+                    compteur++;
+                }
             }
-        }});
-        t1.start();
-        Thread t2 = new Thread(() -> {
-            synchronized (IncrementV2.class) {
-            for(long i = 0 ; i < MAX ; i ++) {
-                compteur++;
+        });
+       Thread t2 = new Thread(() -> {
+            for (long i = 0; i < MAX; i++) {
+                synchronized (IncrementV3.class) {
+                    compteur++;
+                }
             }
-        }});
+        });
         t2.start();
         Utils.joinSansInterrupt(t1);
         Utils.joinSansInterrupt(t2);
         System.out.println("valeur finale : " + compteur);
         System.out.println("temps exec : " + (System.currentTimeMillis() - curTime));
     }
-    
+
     public static void main(String[] args) {
         gogogo();
     }
-    
+
 }
